@@ -1,10 +1,16 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import DodgeGame from './games/DodgeGame';
+import StopTheWheelGame from './games/StopTheWheelGame';
 import './styles/displayGame.scss';
 
 const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 480;
+
+const GAMES = [
+    <DodgeGame SCREEN_WIDTH={ SCREEN_WIDTH } SCREEN_HEIGHT={ SCREEN_HEIGHT } />,
+    <StopTheWheelGame SCREEN_WIDTH={ SCREEN_WIDTH } SCREEN_HEIGHT={ SCREEN_HEIGHT } />
+];
 
 const DisplayGame = () => {
     const [showButton, setButton] = useState(true);
@@ -14,9 +20,9 @@ const DisplayGame = () => {
     }
 
     const getGame = () => {
-        return (
-            <DodgeGame SCREEN_WIDTH={ SCREEN_WIDTH } SCREEN_HEIGHT={ SCREEN_HEIGHT } />
-        );
+        const rand = Math.floor(Math.random() * 2);
+
+        return GAMES[rand]; 
     }
 
     const genBoxStyle = () => {
