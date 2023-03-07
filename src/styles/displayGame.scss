@@ -1,0 +1,17 @@
+.center-items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button {
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size: 2rem;
+
+}
+
+button:active {
+    color: #3638b3;
+}
