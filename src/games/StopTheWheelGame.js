@@ -8,12 +8,13 @@ const ARROW_SIZE = 30;
 
 const SPEED = 13;
 
-const StopTheWheelGame = ({ SCREEN_HEIGHT }) => {
+const StopTheWheelGame = ({ SCREEN_HEIGHT, setGameStopped }) => {
     const [angle, setAngle] = useState(0);
     const [stopGame, setStopGame] = useState(false);
     const [score, setScore] = useState(0);
 
     const handleTargetRotation = () => {
+        setGameStopped(false);
         let id;
         if (angle <= 360 && !stopGame) {
             id = setInterval(() => { setAngle((angle) => angle + SPEED) }, 24);
@@ -25,39 +26,43 @@ const StopTheWheelGame = ({ SCREEN_HEIGHT }) => {
             clearInterval(id);
         };
     }
-    
+
     const handleSpaceKeyPress = (e) => {
         if (e.key !== " " || stopGame) return;
 
         if (angle > 90 && angle < 180) {
-            if (score === 2)
+            if (score === 2) {
                 setStopGame(true);
+                setTimeout(() => { setGameStopped(true) }, 500);
+            }
 
             setScore(score + 1);
         } else {
             setStopGame(true);
+            setTimeout(() => { setGameStopped(true) }, 1000);
         }
     }
 
-    useEffect(handleTargetRotation, [angle, stopGame]);
+    useEffect(handleTargetRotation, [angle, stopGame, setGameStopped]);
 
-     // focuses player
-     const playerRef = useRef(null);
-     useEffect(() => {
+    // focuses player
+    const playerRef = useRef(null);
+
+    useEffect(() => {
         playerRef.current.focus();
     }, []);
 
-    return ( 
+    return (
         <>
-            <Wheel top={SCREEN_HEIGHT/2 - WHEEL_SIZE/2} size={WHEEL_SIZE}>
+            <Wheel top={SCREEN_HEIGHT / 2 - WHEEL_SIZE / 2} size={WHEEL_SIZE}>
                 <Target size={TARGET_SIZE} angle={angle} />
             </Wheel>
-            <Arrow ref={playerRef} onKeyDown={handleSpaceKeyPress} tabIndex={-1} 
-                top={SCREEN_HEIGHT/2 - ARROW_SIZE/2} size={ARROW_SIZE} />
+            <Arrow ref={playerRef} onKeyDown={handleSpaceKeyPress} tabIndex={-1}
+                top={SCREEN_HEIGHT / 2 - ARROW_SIZE / 2} size={ARROW_SIZE} />
         </>
     );
 }
- 
+
 export default StopTheWheelGame;
 
 const Wheel = styled.div`

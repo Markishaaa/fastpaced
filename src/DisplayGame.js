@@ -7,13 +7,18 @@ import './styles/displayGame.scss';
 const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 480;
 
-const GAMES = [
-    <DodgeGame SCREEN_WIDTH={ SCREEN_WIDTH } SCREEN_HEIGHT={ SCREEN_HEIGHT } />,
-    <StopTheWheelGame SCREEN_WIDTH={ SCREEN_WIDTH } SCREEN_HEIGHT={ SCREEN_HEIGHT } />
-];
-
 const DisplayGame = () => {
     const [showButton, setButton] = useState(true);
+    
+    const [gameStopped, setGameStopped] = useState(false);
+    const stopGame = (s) => {
+        setGameStopped(s);
+    };
+
+    const GAMES = [
+        <DodgeGame SCREEN_WIDTH={SCREEN_WIDTH} setGameStopped={stopGame} />,
+        <StopTheWheelGame SCREEN_HEIGHT={SCREEN_HEIGHT} setGameStopped={stopGame} />
+    ];
 
     const startGame = () => {
         setButton(false);
@@ -31,9 +36,10 @@ const DisplayGame = () => {
 
     return ( 
         <>
-            <Box className={ genBoxStyle() } width={ SCREEN_WIDTH } height={ SCREEN_HEIGHT }>
+            <Box className={genBoxStyle()} width={SCREEN_WIDTH} height={SCREEN_HEIGHT}>
                 { showButton && <button onClick={ startGame }>Start</button> }
-                { !showButton && getGame() }
+                { !showButton && !gameStopped && getGame() }
+                { !showButton && gameStopped && getGame() }
             </Box>
         </>
      );

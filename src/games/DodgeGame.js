@@ -14,7 +14,7 @@ const PLAYER_POS_X = 50;
 const OBSTACLE_WIDTH = 140;
 const OBSTACLE_HEIGHT = 65;
 
-const DodgeGame = ({ SCREEN_WIDTH }) => {
+const DodgeGame = ({ SCREEN_WIDTH, setGameStopped }) => {
     const [stopGame, setStopGame] = useState(false);
     const [rotateFactor, setRotateFactor] = useState(0);
     const [playerHit, setPlayerHit] = useState(false);
@@ -25,6 +25,7 @@ const DodgeGame = ({ SCREEN_WIDTH }) => {
 
     // handles obstacle movement and logic
     const handleObstacleMovement = () => {
+        setGameStopped(false);
         let id;
         if (obstaclePos > -OBSTACLE_WIDTH && !stopGame) {
             const hasCollidedWithPlayer = obstaclePos > PLAYER_POS_X - OBSTACLE_WIDTH && obstaclePos < PLAYER_POS_X + PLAYER_WIDTH;
@@ -32,6 +33,7 @@ const DodgeGame = ({ SCREEN_WIDTH }) => {
 
             if (playerIsNotHighEnough && hasCollidedWithPlayer) {
                 setStopGame(true);
+                setTimeout(() => { setGameStopped(true) }, 1000);
                 setPlayerHit(true);
             }
 
@@ -41,6 +43,7 @@ const DodgeGame = ({ SCREEN_WIDTH }) => {
         return () => {
             if (obstaclePos === -OBSTACLE_WIDTH && !stopGame) {
                 setStopGame(true);
+                setTimeout(() => { setGameStopped(true) }, 1000);
             }
 
             clearInterval(id);
@@ -113,10 +116,10 @@ const DodgeGame = ({ SCREEN_WIDTH }) => {
         playerRef.current.focus();
     }, []);
 
-    useEffect(handleObstacleMovement, [obstaclePos, playerPos, stopGame]);
-    useEffect(handlePlayerJump, [fall, spacePressed, playerPos, stopGame]);
-    useEffect(handlePlayerFall, [fall, playerPos, stopGame]);
-    useEffect(handlePlayerHit, [rotateFactor, playerHit, stopGame]);
+    useEffect(handleObstacleMovement, [obstaclePos, playerPos, stopGame, setGameStopped]);
+    useEffect(handlePlayerJump, [fall, spacePressed, playerPos, stopGame, setGameStopped]);
+    useEffect(handlePlayerFall, [fall, playerPos, stopGame, setGameStopped]);
+    useEffect(handlePlayerHit, [rotateFactor, playerHit, stopGame, setGameStopped]);
 
     return (
         <>
